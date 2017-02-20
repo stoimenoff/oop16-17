@@ -11,7 +11,12 @@
 =======
 За всякакви въпроси, забележки и коментари можете да ни пишете на:
 
-* Светомир Стоименов [stoimenoffjr@gmail.com](mailto:stoimenoffjr@gmail.com)- семинар.
+* Светомир Стоименов [stoimenoffjr@gmail.com](mailto:stoimenoffjr@gmail.com)
+
+* Виолета Йотова [violeta.yotova96@gmail.com](mailto:violeta.yotova96@gmail.com)
+
+* Никола Стоянов
+[ns.barzakov@gmail.com](mailto:ns.barzakov@gmail.com)
 
 Грешки
 ======

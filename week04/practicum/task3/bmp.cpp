@@ -1,5 +1,12 @@
 #include "bmp.h"
 
+// В тази задача използваме типовете int*_t и uint*_t, дефинирани в <cstdint> вместо
+// стандартните short, int, long, long long, etc. Те са същите като познатите ни досега,
+// просто преименувани (виж. typedef и using)
+//
+// Удобни са когато работи с пипкави неща от към брой битове, каквито са например двуичните
+// файлове, защото правят кода по разбираем.
+
 /**
  *  Конструктор на класа Bmp
  *
@@ -10,19 +17,17 @@
  *      - подадения файл съществува, но не е BMP изображение
  *      - подаденият файл е валидно BMP изображение, но използва опции които не поддържаме.
  *
- *  Обещали сме, всички обекти от класа ще са валидни (следва от RAII принципа), поради което не
- *  можем да върнем невалиден обект.
- *
- *  В C++ стандартното решение в такъв случай е конструктора да хвърля грешка (exception).
- *  Но за да не навлизаме в материала за изключения аз просто ще прекратявам програмата с `exit`.
+ *  Обещали сме, всички обекти от класа ще са валидни, поради което не можем да върнем невалиден обект.
+ *  Затова в такъв случай е конструктора да хвърля грешка (exception).
  */
 Bmp::Bmp(const char* filename) :
     pixelArray(NULL)
 {
     this->file = fstream(filename, ios::in | ios::out | ios::binary);
     if (!this->file.is_open()) {
-        cerr << "Could not open file\n";
-        exit(1);
+        std::stringstream ss;
+        ss << "could not open file '" << filename << "'";
+        throw std::logic_error(ss.str());
     };
 
     // Внимание - control ни е масив от два char-a, но не е низ, защото няма терминираща нула.
@@ -30,8 +35,7 @@ Bmp::Bmp(const char* filename) :
     char control[2];
     this->file.read(control, 2);
     if (control[0] != 'B' || control[1] != 'M') {
-        cerr << "Incorrect file format\n";
-        exit(1);
+        throw std::logic_error("incorrect file format");
     }
 
     // За да прочетем информацията от bmp header-a процедираме по следния начин:
@@ -45,8 +49,7 @@ Bmp::Bmp(const char* filename) :
     this->file.read(reinterpret_cast<char*>(&this->width), sizeof(this->width));
     this->file.read(reinterpret_cast<char*>(&this->height), sizeof(this->height));
     if (this->width % 4 != 0) {
-        cerr << "Image width must be multiple of 4\n";
-        exit(1);
+        throw std::logic_error("image width must be multiple of 4");
     }
 
     size_t len = this->width * this->height;
